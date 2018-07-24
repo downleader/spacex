@@ -1,0 +1,35 @@
+def buildVersionCode = { int versionMajor, int versionMinor -> versionMajor * 100 + versionMinor }
+def buildVersionName = { int versionMajor, int versionMinor -> "${versionMajor}.${versionMinor}" }
+
+ext {
+    packageName = 'com.example.spacex'
+
+    appVersionMajor = 1
+    appVersionMinor = 0
+
+    appVersionCode = buildVersionCode(appVersionMajor, appVersionMinor)
+    appVersionName = buildVersionName(appVersionMajor, appVersionMinor)
+
+    androidMinSdkVersion = 19
+    androidTargetSdkVersion = 26
+    androidCompileSdkVersion = 26
+
+    supportLibraryVersion = '27.1.1'
+
+    daggerVersion = '2.11'
+    rxJavaVersion = '2.1.4'
+    rxAndroidVersion = '2.0.1'
+    gsonVersion = '2.8.2'
+    retrofitVersion = '2.4.0'
+    picassoVersion = '2.5.2'
+    butterKnifeVersion = '8.8.1'
+    timberVersion = '4.5.1'
+
+    autoValueVersion = '1.5.2'
+    autoValueParcelVersion = '0.2.5'
+    autoValueGsonVersion = '0.6.0'
+
+    junitVersion = '4.12'
+    testRunnerVersion = '1.0.2'
+    espressoVersion = '3.0.2'
+}

@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
+apply from: 'versions.gradle'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion androidCompileSdkVersion
     defaultConfig {
-        applicationId "com.example.spacex"
-        minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        applicationId packageName
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
+        versionCode appVersionCode
+        versionName appVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -16,14 +17,46 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
 
-    testImplementation 'junit:junit:4.12'
+    annotationProcessor "com.google.dagger:dagger-compiler:${daggerVersion}"
+    implementation "com.google.dagger:dagger:${daggerVersion}"
 
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}"
+
+    implementation "com.google.code.gson:gson:${gsonVersion}"
+
+    implementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+
+    implementation "com.squareup.picasso:picasso:${picassoVersion}"
+
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterKnifeVersion}"
+    implementation "com.jakewharton:butterknife:${butterKnifeVersion}"
+
+    implementation "com.jakewharton.timber:timber:${timberVersion}"
+
+    annotationProcessor "com.google.auto.value:auto-value:${autoValueVersion}"
+    compileOnly "com.google.auto.value:auto-value:${autoValueVersion}"
+
+    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:${autoValueParcelVersion}"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-gson:${autoValueGsonVersion}"
+    compileOnly "com.ryanharter.auto.value:auto-value-gson-annotations:${autoValueGsonVersion}"
+
+    testImplementation "junit:junit:$junitVersion"
+
+    androidTestImplementation "com.android.support.test:runner:$testRunnerVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
 }
