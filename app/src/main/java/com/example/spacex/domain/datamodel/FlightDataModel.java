@@ -14,7 +14,7 @@ public class FlightDataModel {
     private final DataRepository dataRepository;
 
     @Inject
-    public FlightDataModel(DataRepository dataRepository) {
+    FlightDataModel(DataRepository dataRepository) {
         this.dataRepository = dataRepository;
     }
 

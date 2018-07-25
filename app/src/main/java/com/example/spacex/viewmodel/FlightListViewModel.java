@@ -1,13 +1,16 @@
 package com.example.spacex.viewmodel;
 
+import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 
 import com.example.spacex.R;
+import com.example.spacex.data.display.FlightItemDisplayModel;
 import com.example.spacex.data.response.Flight;
 import com.example.spacex.domain.datamodel.FlightDataModel;
 import com.example.spacex.utils.rxjava.SchedulerProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,7 +19,16 @@ import io.reactivex.observers.DisposableSingleObserver;
 
 import timber.log.Timber;
 
+import static com.example.spacex.utils.BusinessUtils.formatLaunchDate;
+import static com.example.spacex.utils.BusinessUtils.formatMissionName;
+
+import static com.example.spacex.utils.UiUtils.getString;
+
 public class FlightListViewModel extends BaseViewModel {
+
+    public final ObservableBoolean isLoading = new ObservableBoolean();
+    public final ObservableBoolean isListVisible = new ObservableBoolean();
+    public final ObservableField<String> message = new ObservableField<>();
 
     private final FlightDataModel dataModel;
     private final SchedulerProvider schedulerProvider;
@@ -38,29 +50,57 @@ public class FlightListViewModel extends BaseViewModel {
     public void onStart() {
         super.onStart();
         if (!flightsLoaded) {
+            isLoading.set(true);
             disposable.add(dataModel.getFlights()
+                    .map(this::mapFlights)
                     .observeOn(schedulerProvider.ui())
-                    .doAfterTerminate(() -> flightsLoaded = true)
+                    .doAfterTerminate(() -> {
+                        isLoading.set(false);
+                        flightsLoaded = true;
+                    })
                     .subscribeWith(new FlightsObserver()));
         }
     }
 
-    private class FlightsObserver extends DisposableSingleObserver<List<Flight>> {
+    @NonNull
+    private List<FlightItemDisplayModel> mapFlights(@NonNull List<Flight> flights) {
+        List<FlightItemDisplayModel> models = new ArrayList<>(flights.size());
+        for (Flight flight : flights) {
+            models.add(mapFlight(flight));
+        }
+        return models;
+    }
+
+    @NonNull
+    private FlightItemDisplayModel mapFlight(@NonNull Flight flight) {
+        return new FlightItemDisplayModel.Builder()
+                .setMissionName(formatMissionName(flight.flightNumber(), flight.missionName()))
+                .setLaunchDate(formatLaunchDate(flight.launchDateUnix()))
+                .build();
+    }
+
+    private class FlightsObserver extends DisposableSingleObserver<List<FlightItemDisplayModel>> {
 
         @Override
-        public void onSuccess(List<Flight> flights) {
-            listener.onFlightsLoaded(flights);
+        public void onSuccess(List<FlightItemDisplayModel> flights) {
+            if (flights.isEmpty()) {
+                isListVisible.set(false);
+                message.set(getString(R.string.error_no_data));
+            } else {
+                isListVisible.set(true);
+                listener.onFlightsLoaded(flights);
+            }
         }
 
         @Override
         public void onError(Throwable throwable) {
+            isListVisible.set(false);
+            message.set(getString(R.string.error_unexpected));
             Timber.w(throwable);
-            listener.onLoadingError(R.string.error_unexpected);
         }
     }
 
     public interface Listener {
-        void onFlightsLoaded(@NonNull List<Flight> flights);
-        void onLoadingError(@StringRes int errorMessageId);
+        void onFlightsLoaded(@NonNull List<FlightItemDisplayModel> flights);
     }
 }

@@ -10,13 +10,13 @@ import io.reactivex.plugins.RxJavaPlugins;
 
 import timber.log.Timber;
 
-public class SpaceXApplication extends Application {
+public class SpaceXApp extends Application {
 
-    private static SpaceXApplication instance;
+    private static SpaceXApp instance;
 
     private ApplicationComponent applicationComponent;
 
-    public static SpaceXApplication getInstance() {
+    public static SpaceXApp getInstance() {
         return instance;
     }
 

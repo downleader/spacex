@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="flight_list_padding">20dp</dimen>
+    <dimen name="flight_launch_date_top_margin">10dp</dimen>
+    <dimen name="item_flight_content_padding">20dp</dimen>
+</resources>
