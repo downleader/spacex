@@ -2,6 +2,7 @@ package com.example.spacex.ui.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import com.example.spacex.R;
 import com.example.spacex.data.display.FlightItemDisplayModel;
 import com.example.spacex.ui.viewholder.FlightViewHolder;
+import com.example.spacex.utils.listener.OnFlightClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,11 @@ import java.util.List;
 public class FlightAdapter extends RecyclerView.Adapter<FlightViewHolder> {
 
     private final List<FlightItemDisplayModel> flightItems = new ArrayList<>();
+    private OnFlightClickListener onFlightClickListener;
+
+    public void setOnFlightClickListener(@Nullable OnFlightClickListener onFlightClickListener) {
+        this.onFlightClickListener = onFlightClickListener;
+    }
 
     public void setItems(@NonNull List<FlightItemDisplayModel> items) {
         flightItems.clear();
@@ -28,7 +35,8 @@ public class FlightAdapter extends RecyclerView.Adapter<FlightViewHolder> {
     public FlightViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return new FlightViewHolder(DataBindingUtil.inflate(inflater,
-                R.layout.item_flight, parent, false));
+                R.layout.item_flight, parent, false),
+                onFlightClickListener);
     }
 
     @Override

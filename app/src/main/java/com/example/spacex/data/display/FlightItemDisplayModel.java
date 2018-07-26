@@ -1,40 +1,19 @@
 package com.example.spacex.data.display;
 
+import android.support.annotation.NonNull;
+
+import com.example.spacex.data.response.Flight;
+
 public class FlightItemDisplayModel {
 
-    private final String missionName;
-    private final String launchDate;
+    private final Flight flight;
 
-    private FlightItemDisplayModel(Builder builder) {
-        missionName = builder.missionName;
-        launchDate = builder.launchDate;
+    public FlightItemDisplayModel(@NonNull Flight flight) {
+        this.flight = flight;
     }
 
-    public String getMissionName() {
-        return missionName;
-    }
-
-    public String getLaunchDate() {
-        return launchDate;
-    }
-
-    public static final class Builder {
-
-        private String missionName;
-        private String launchDate;
-
-        public Builder setMissionName(String missionName) {
-            this.missionName = missionName;
-            return this;
-        }
-
-        public Builder setLaunchDate(String launchDate) {
-            this.launchDate = launchDate;
-            return this;
-        }
-
-        public FlightItemDisplayModel build() {
-            return new FlightItemDisplayModel(this);
-        }
+    @NonNull
+    public Flight getFlight() {
+        return flight;
     }
 }

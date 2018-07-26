@@ -3,4 +3,8 @@
     <string name="error_no_data">No data available</string>
     <string name="error_unexpected">Unexpected error</string>
     <string name="mission_name_format">#%1$d %2$s</string>
+    <string name="launch_date_label">Date: %s</string>
+    <string name="launch_site_label">Location: %s</string>
+    <string name="launch_status_success">Success</string>
+    <string name="launch_status_failure">Failure</string>
 </resources>

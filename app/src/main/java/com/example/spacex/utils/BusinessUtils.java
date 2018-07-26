@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.spacex.R;
+import com.example.spacex.data.response.Flight;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,15 +18,20 @@ public final class BusinessUtils {
             "HH:mm:ss MM/dd/yyyy", Locale.getDefault());
 
     @NonNull
-    public static String formatMissionName(@Nullable Integer flightNumber, @Nullable String missionName) {
+    public static String formatMissionName(@NonNull Flight flight) {
         return UiUtils.getString(R.string.mission_name_format,
-                safeUnbox(flightNumber), missionName);
+                safeUnbox(flight.flightNumber()),
+                flight.missionName());
     }
 
     @NonNull
-    public static String formatLaunchDate(@Nullable Long launchDateUnix) {
-        long timestamp = safeUnbox(launchDateUnix) * MILLIS_IN_SECOND;
+    public static String formatLaunchDate(@NonNull Flight flight) {
+        long timestamp = safeUnbox(flight.launchDateUnix()) * MILLIS_IN_SECOND;
         return launchDateFormat.format(new Date(timestamp));
+    }
+
+    public static boolean safeUnbox(@Nullable Boolean value) {
+        return (value != null) ? value : false;
     }
 
     private static long safeUnbox(@Nullable Long value) {

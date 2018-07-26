@@ -11,6 +11,7 @@ import com.example.spacex.data.display.FlightItemDisplayModel;
 import com.example.spacex.databinding.ActivityFlightListBinding;
 import com.example.spacex.di.component.ActivityComponent;
 import com.example.spacex.ui.adapter.FlightAdapter;
+import com.example.spacex.utils.NavigationUtils;
 import com.example.spacex.viewmodel.FlightListViewModel;
 
 import java.util.List;
@@ -35,8 +36,8 @@ public class FlightListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ActivityFlightListBinding flightListBinding = DataBindingUtil
                 .setContentView(this, R.layout.activity_flight_list);
-        viewModel.init(new ModelListener());
         flightListBinding.setViewModel(viewModel);
+        viewModel.init(new ModelListener());
         ButterKnife.bind(this);
         setupFlightList();
     }
@@ -60,6 +61,8 @@ public class FlightListActivity extends BaseActivity {
 
     private void setupFlightList() {
         flightAdapter = new FlightAdapter();
+        flightAdapter.setOnFlightClickListener((flight) ->
+                NavigationUtils.openDetails(this, flight));
         flightList.setAdapter(flightAdapter);
         flightList.setHasFixedSize(true);
         flightList.setLayoutManager(new LinearLayoutManager(this,

@@ -19,9 +19,6 @@ import io.reactivex.observers.DisposableSingleObserver;
 
 import timber.log.Timber;
 
-import static com.example.spacex.utils.BusinessUtils.formatLaunchDate;
-import static com.example.spacex.utils.BusinessUtils.formatMissionName;
-
 import static com.example.spacex.utils.UiUtils.getString;
 
 public class FlightListViewModel extends BaseViewModel {
@@ -73,10 +70,7 @@ public class FlightListViewModel extends BaseViewModel {
 
     @NonNull
     private FlightItemDisplayModel mapFlight(@NonNull Flight flight) {
-        return new FlightItemDisplayModel.Builder()
-                .setMissionName(formatMissionName(flight.flightNumber(), flight.missionName()))
-                .setLaunchDate(formatLaunchDate(flight.launchDateUnix()))
-                .build();
+        return new FlightItemDisplayModel(flight);
     }
 
     private class FlightsObserver extends DisposableSingleObserver<List<FlightItemDisplayModel>> {

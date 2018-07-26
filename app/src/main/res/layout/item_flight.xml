@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.spacex.utils.BusinessUtils"/>
         <variable
             name="model"
             type="com.example.spacex.data.display.FlightItemDisplayModel"/>
@@ -12,7 +13,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:contentPadding="@dimen/item_flight_content_padding"
+        app:contentPadding="@dimen/card_view_content_padding"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -24,7 +25,7 @@
                 android:id="@+id/mission_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{model.missionName}"
+                android:text="@{BusinessUtils.formatMissionName(model.flight)}"
                 style="@style/FlightTitle"/>
 
             <TextView
@@ -32,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/flight_launch_date_top_margin"
-                android:text="@{model.launchDate}"
+                android:text="@{BusinessUtils.formatLaunchDate(model.flight)}"
                 style="@style/FlightSubtitle"/>
 
         </LinearLayout>
