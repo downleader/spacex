@@ -29,8 +29,9 @@ public class SQLiteFlightDao implements FlightDao {
             + SQLiteContract.Flight.COLUMN_LAUNCH_SITE + ","
             + SQLiteContract.Flight.COLUMN_LAUNCH_SUCCESS + ","
             + SQLiteContract.Flight.COLUMN_ROCKET + ","
+            + SQLiteContract.Flight.COLUMN_LINKS + ","
             + SQLiteContract.Flight.COLUMN_DETAILS
-            + ") VALUES(?,?,?,?,?,?,?)";
+            + ") VALUES(?,?,?,?,?,?,?,?)";
 
     private final SQLiteHelper helper;
     private final Gson gson;
@@ -88,6 +89,7 @@ public class SQLiteFlightDao implements FlightDao {
         statement.bindString(index++, gson.toJson(flight.launchSite()));
         statement.bindLong(index++, PersistenceUtils.fromBoolean(flight.launchSuccess()));
         statement.bindString(index++, gson.toJson(flight.rocket()));
+        statement.bindString(index++, gson.toJson(flight.links()));
         bindStringOrNull(statement, flight.details(), index);
     }
 

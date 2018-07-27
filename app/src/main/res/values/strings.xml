@@ -8,4 +8,5 @@
     <string name="launch_site_label">Location: %s</string>
     <string name="launch_status_success">Success</string>
     <string name="launch_status_failure">Failure</string>
+    <string name="photo_content_description">Photo</string>
 </resources>

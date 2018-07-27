@@ -2,7 +2,9 @@
 <resources>
     <dimen name="flight_list_padding">20dp</dimen>
     <dimen name="flight_launch_date_top_margin">10dp</dimen>
+    <dimen name="flight_status_text_size">13sp</dimen>
     <dimen name="card_view_content_padding">20dp</dimen>
     <dimen name="card_view_start_margin">20dp</dimen>
     <dimen name="card_view_margin">20dp</dimen>
+    <dimen name="photo_size">100dp</dimen>
 </resources>

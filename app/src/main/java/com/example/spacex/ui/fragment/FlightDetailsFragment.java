@@ -7,15 +7,18 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.spacex.R;
 import com.example.spacex.data.response.Flight;
 import com.example.spacex.databinding.FragmentFlightDetailsBinding;
 import com.example.spacex.di.component.FragmentComponent;
 import com.example.spacex.viewmodel.FlightDetailsViewModel;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -25,6 +28,9 @@ public class FlightDetailsFragment extends BaseFragment {
 
     @Inject
     FlightDetailsViewModel viewModel;
+
+    @BindView(R.id.launch_photo)
+    ImageView photoView;
 
     private Unbinder unbinder;
 
@@ -47,7 +53,7 @@ public class FlightDetailsFragment extends BaseFragment {
         if (arguments != null) {
             Flight flight = arguments.getParcelable(ARG_FLIGHT);
             if (flight != null) {
-                viewModel.init(flight);
+                viewModel.init(flight, new ModelListener());
             }
         }
     }
@@ -86,5 +92,16 @@ public class FlightDetailsFragment extends BaseFragment {
     @Override
     protected void inject(FragmentComponent fragmentComponent) {
         fragmentComponent.inject(this);
+    }
+
+    private class ModelListener implements FlightDetailsViewModel.Listener {
+
+        @Override
+        public void loadPhoto(@NonNull String photoUrl) {
+            Picasso.with(getContext())
+                    .load(photoUrl)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(photoView);
+        }
     }
 }

@@ -19,6 +19,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             + SQLiteContract.Flight.COLUMN_LAUNCH_SITE + " TEXT, "
             + SQLiteContract.Flight.COLUMN_LAUNCH_SUCCESS + " INTEGER, "
             + SQLiteContract.Flight.COLUMN_ROCKET + " TEXT, "
+            + SQLiteContract.Flight.COLUMN_LINKS + " TEXT, "
             + SQLiteContract.Flight.COLUMN_DETAILS + " TEXT"
             + ")";
 

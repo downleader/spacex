@@ -28,6 +28,7 @@ public abstract class Flight implements Parcelable {
         public abstract Builder setRocket(Rocket rocket);
         public abstract Builder setLaunchSite(LaunchSite launchSite);
         public abstract Builder setLaunchSuccess(Boolean launchSuccess);
+        public abstract Builder setLinks(Links links);
         public abstract Builder setDetails(String details);
         public abstract Flight build();
     }
@@ -55,6 +56,10 @@ public abstract class Flight implements Parcelable {
     @Nullable
     @SerializedName("launch_success")
     public abstract Boolean launchSuccess();
+
+    @Nullable
+    @SerializedName("links")
+    public abstract Links links();
 
     @Nullable
     @SerializedName("details")

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.example.spacex.data.response.Flight;
 import com.example.spacex.data.response.LaunchSite;
+import com.example.spacex.data.response.Links;
 import com.example.spacex.data.response.Rocket;
 
 import com.google.gson.Gson;
@@ -26,6 +27,8 @@ public final class PersistenceUtils {
                         .getColumnIndex(COLUMN_LAUNCH_SITE)), LaunchSite.class))
                 .setLaunchSuccess(toBoolean(cursor.getInt(cursor
                         .getColumnIndex(COLUMN_LAUNCH_SUCCESS))))
+                .setLinks(gson.fromJson(cursor.getString(cursor
+                        .getColumnIndex(COLUMN_LINKS)), Links.class))
                 .setDetails(cursor.getString(cursor.getColumnIndex(COLUMN_DETAILS)))
                 .build();
     }

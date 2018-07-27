@@ -10,6 +10,7 @@ public final class SQLiteContract {
         public static final String COLUMN_LAUNCH_SITE = "launch_site";
         public static final String COLUMN_LAUNCH_SUCCESS = "launch_success";
         public static final String COLUMN_ROCKET = "rocket";
+        public static final String COLUMN_LINKS = "links";
         public static final String COLUMN_DETAILS = "details";
     }
 
