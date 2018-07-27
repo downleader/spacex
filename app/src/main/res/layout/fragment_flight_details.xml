@@ -28,7 +28,6 @@
 
             <TextView
                 android:id="@+id/mission_name"
-                style="@style/FlightTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -38,20 +37,20 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/launch_photo"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Mission Name" />
+                tools:text="Mission Name"
+                style="@style/FlightTitle"/>
 
             <TextView
                 android:id="@+id/launch_status"
-                style="@style/FlightStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@{viewModel.details.launched ? @color/launch_status_success : @color/launch_status_failure}"
                 android:text="@{viewModel.details.launched ? @string/launch_status_success : @string/launch_status_failure}"
-                android:textSize="@dimen/flight_status_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mission_name"
-                tools:text="Success" />
+                tools:text="Success"
+                style="@style/FlightStatus"/>
 
             <ImageView
                 android:id="@+id/launch_photo"
@@ -60,39 +59,42 @@
                 android:contentDescription="@string/photo_content_description"
                 android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/launch_date"
-                style="@style/FlightSubtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@{viewModel.details.launchDate}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/launch_photo"
-                tools:text="Date: 00:30:00 03/25/2006" />
+                tools:text="Date: 00:30:00 03/25/2006"
+                style="@style/FlightSubtitle"/>
 
             <TextView
                 android:id="@+id/launch_site"
-                style="@style/FlightSubtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.details.launchSite}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/launch_date"
-                tools:text="Location: Kwajalein Omelek Atoll Island" />
+                tools:text="Location: Kwajalein Omelek Atoll Island"
+                style="@style/FlightSubtitle"/>
 
             <TextView
                 android:id="@+id/launch_details"
-                style="@style/FlightDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@{viewModel.details.details}"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/launch_site"
-                tools:text="Flight Details" />
+                tools:text="Flight Details"
+                style="@style/FlightDescription"/>
 
         </android.support.constraint.ConstraintLayout>
 

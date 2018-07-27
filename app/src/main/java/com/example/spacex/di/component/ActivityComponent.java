@@ -10,6 +10,8 @@ import dagger.Component;
 @ActivityScope
 @Component(dependencies = {ApplicationComponent.class}, modules = {ActivityModule.class})
 public interface ActivityComponent {
+
     void inject(FlightListActivity activity);
+
     void inject(FlightDetailsActivity activity);
 }

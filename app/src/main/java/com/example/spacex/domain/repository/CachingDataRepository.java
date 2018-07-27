@@ -11,15 +11,16 @@ import io.reactivex.Single;
 
 public class CachingDataRepository implements DataRepository {
 
+    private final SchedulerProvider schedulerProvider;
     private final FlightService flightService;
     private final FlightDao flightDao;
-    private final SchedulerProvider schedulerProvider;
 
-    public CachingDataRepository(FlightService flightService, FlightDao flightDao,
-                                 SchedulerProvider schedulerProvider) {
+    public CachingDataRepository(SchedulerProvider schedulerProvider,
+                                 FlightService flightService,
+                                 FlightDao flightDao) {
+        this.schedulerProvider = schedulerProvider;
         this.flightService = flightService;
         this.flightDao = flightDao;
-        this.schedulerProvider = schedulerProvider;
     }
 
     @Override

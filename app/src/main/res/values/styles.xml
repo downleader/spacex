@@ -27,7 +27,7 @@
 
     <style name="FlightStatus" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/flight_status_text_size</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:paddingStart">25dp</item>

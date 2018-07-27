@@ -80,8 +80,8 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    DataRepository getDataRepository(FlightService flightService, FlightDao flightDao,
-                                     SchedulerProvider schedulerProvider) {
-        return new CachingDataRepository(flightService, flightDao, schedulerProvider);
+    DataRepository getDataRepository(SchedulerProvider schedulerProvider,
+                                     FlightService flightService, FlightDao flightDao) {
+        return new CachingDataRepository(schedulerProvider, flightService, flightDao);
     }
 }

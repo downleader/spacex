@@ -10,6 +10,8 @@ import dagger.Component;
 @FragmentScope
 @Component(dependencies = {ApplicationComponent.class}, modules = {FragmentModule.class})
 public interface FragmentComponent {
+
     void inject(FlightListFragment fragment);
+
     void inject(FlightDetailsFragment fragment);
 }
