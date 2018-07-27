@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.example.spacex.R"/>
+        <variable
+            name="viewModel"
+            type="com.example.spacex.viewmodel.FlightDetailsViewModel"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/card_view_margin"
+        android:layout_marginBottom="@dimen/card_view_margin"
+        android:layout_marginStart="@dimen/card_view_start_margin"
+        android:layout_marginEnd="@dimen/card_view_margin"
+        app:contentPadding="@dimen/card_view_content_padding"
+        app:cardUseCompatPadding="true"
+        style="@style/FlightCard">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{viewModel.isContentVisible ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                android:id="@+id/mission_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.details.missionName}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Mission Name"
+                style="@style/FlightTitle"/>
+
+            <TextView
+                android:id="@+id/launch_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.details.launched ? @string/launch_status_success : @string/launch_status_failure}"
+                android:background="@{viewModel.details.launched ? @color/launch_status_success : @color/launch_status_failure}"
+                app:layout_constraintBaseline_toBaselineOf="@+id/mission_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Success"
+                style="@style/FlightStatus"/>
+
+            <TextView
+                android:id="@+id/launch_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@{viewModel.details.launchDate}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mission_name"
+                tools:text="Date: 00:30:00 03/25/2006"
+                style="@style/FlightSubtitle"/>
+
+            <TextView
+                android:id="@+id/launch_site"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{viewModel.details.launchSite}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/launch_date"
+                tools:text="Location: Kwajalein Omelek Atoll Island"
+                style="@style/FlightSubtitle"/>
+
+            <TextView
+                android:id="@+id/launch_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@{viewModel.details.details}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/launch_site"
+                tools:text="Flight Details"
+                style="@style/FlightDescription"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/details_placeholder"
+            android:visibility="@{viewModel.isContentVisible ? View.GONE : View.VISIBLE}"/>
+
+    </android.support.v7.widget.CardView>
+
+</layout>

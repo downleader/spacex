@@ -1,79 +1,54 @@
 package com.example.spacex.ui.activity;
 
-import android.databinding.DataBindingUtil;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.FragmentTransaction;
 
 import com.example.spacex.R;
-import com.example.spacex.data.display.FlightItemDisplayModel;
-import com.example.spacex.databinding.ActivityFlightListBinding;
+import com.example.spacex.data.response.Flight;
 import com.example.spacex.di.component.ActivityComponent;
-import com.example.spacex.ui.adapter.FlightAdapter;
+import com.example.spacex.ui.fragment.FlightDetailsFragment;
+import com.example.spacex.ui.fragment.FlightListFragment;
 import com.example.spacex.utils.NavigationUtils;
-import com.example.spacex.viewmodel.FlightListViewModel;
+import com.example.spacex.utils.UiUtils;
+import com.example.spacex.utils.listener.OnFlightClickListener;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class FlightListActivity extends BaseActivity {
-
-    @Inject
-    FlightListViewModel viewModel;
-
-    @BindView(R.id.flight_list)
-    RecyclerView flightList;
-
-    private FlightAdapter flightAdapter;
+public class FlightListActivity extends BaseActivity implements OnFlightClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityFlightListBinding flightListBinding = DataBindingUtil
-                .setContentView(this, R.layout.activity_flight_list);
-        flightListBinding.setViewModel(viewModel);
-        viewModel.init(new ModelListener());
-        ButterKnife.bind(this);
-        setupFlightList();
+        boolean isTablet = UiUtils.isTablet();
+        if (isTablet) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+        setContentView(R.layout.activity_flight_list);
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.list_container, FlightListFragment.newInstance());
+            if (isTablet) {
+                transaction.replace(R.id.details_container, FlightDetailsFragment.newInstance());
+            }
+            transaction.commit();
+        }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        viewModel.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        viewModel.onStop();
+    public void onFlightClick(@NonNull Flight flight) {
+        if (UiUtils.isTablet()) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.details_container, FlightDetailsFragment.newInstance(flight))
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit();
+        } else {
+            NavigationUtils.openDetails(this, flight);
+        }
     }
 
     @Override
     protected void inject(ActivityComponent activityComponent) {
         activityComponent.inject(this);
-    }
-
-    private void setupFlightList() {
-        flightAdapter = new FlightAdapter();
-        flightAdapter.setOnFlightClickListener((flight) ->
-                NavigationUtils.openDetails(this, flight));
-        flightList.setAdapter(flightAdapter);
-        flightList.setHasFixedSize(true);
-        flightList.setLayoutManager(new LinearLayoutManager(this,
-                LinearLayoutManager.VERTICAL, false));
-    }
-
-    private class ModelListener implements FlightListViewModel.Listener {
-
-        @Override
-        public void onFlightsLoaded(@NonNull List<FlightItemDisplayModel> flights) {
-            flightAdapter.setItems(flights);
-        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.spacex.viewmodel;
 
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
@@ -14,6 +15,7 @@ import javax.inject.Inject;
 
 public class FlightDetailsViewModel extends BaseViewModel {
 
+    public final ObservableBoolean isContentVisible = new ObservableBoolean();
     public final ObservableField<FlightDetailsDisplayModel> details = new ObservableField<>();
 
     @Inject
@@ -22,6 +24,7 @@ public class FlightDetailsViewModel extends BaseViewModel {
 
     public void init(@NonNull Flight flight) {
         details.set(mapFlight(flight));
+        isContentVisible.set(true);
     }
 
     @NonNull
