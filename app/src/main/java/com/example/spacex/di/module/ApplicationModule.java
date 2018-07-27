@@ -5,7 +5,10 @@ import android.content.Context;
 
 import com.example.spacex.domain.repository.CachingDataRepository;
 import com.example.spacex.domain.repository.DataRepository;
-import com.example.spacex.domain.service.DataService;
+import com.example.spacex.domain.service.FlightService;
+import com.example.spacex.persistence.dao.FlightDao;
+import com.example.spacex.persistence.dao.SQLiteFlightDao;
+import com.example.spacex.persistence.sqlite.SQLiteHelper;
 import com.example.spacex.utils.gson.GsonAdapterFactory;
 import com.example.spacex.utils.rxjava.SchedulerProvider;
 import com.example.spacex.utils.rxjava.SchedulerProviderImpl;
@@ -59,13 +62,26 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    DataService getDataService(OkHttpClient.Builder okHttpClientBuilder, Gson gson) {
-        return new DataService(okHttpClientBuilder, gson);
+    SQLiteHelper getSQLiteHelper(Context context) {
+        return new SQLiteHelper(context);
     }
 
     @Provides
     @Singleton
-    DataRepository getDataRepository(DataService dataService, SchedulerProvider schedulerProvider) {
-        return new CachingDataRepository(dataService, schedulerProvider);
+    FlightDao getFlightDao(SQLiteHelper helper, Gson gson) {
+        return new SQLiteFlightDao(helper, gson);
+    }
+
+    @Provides
+    @Singleton
+    FlightService getFlightService(OkHttpClient.Builder okHttpClientBuilder, Gson gson) {
+        return new FlightService(okHttpClientBuilder, gson);
+    }
+
+    @Provides
+    @Singleton
+    DataRepository getDataRepository(FlightService flightService, FlightDao flightDao,
+                                     SchedulerProvider schedulerProvider) {
+        return new CachingDataRepository(flightService, flightDao, schedulerProvider);
     }
 }

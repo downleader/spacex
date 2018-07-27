@@ -34,11 +34,11 @@ public final class BusinessUtils {
         return (value != null) ? value : false;
     }
 
-    private static long safeUnbox(@Nullable Long value) {
+    public static int safeUnbox(@Nullable Integer value) {
         return (value != null) ? value : 0;
     }
 
-    private static int safeUnbox(@Nullable Integer value) {
+    public static long safeUnbox(@Nullable Long value) {
         return (value != null) ? value : 0;
     }
 

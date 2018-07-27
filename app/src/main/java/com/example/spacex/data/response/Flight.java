@@ -12,8 +12,24 @@ import com.google.gson.annotations.SerializedName;
 @AutoValue
 public abstract class Flight implements Parcelable {
 
+    public static Builder builder() {
+        return new AutoValue_Flight.Builder();
+    }
+
     public static TypeAdapter<Flight> typeAdapter(Gson gson) {
         return new AutoValue_Flight.GsonTypeAdapter(gson);
+    }
+
+    @AutoValue.Builder
+    public static abstract class Builder {
+        public abstract Builder setFlightNumber(Integer flightNumber);
+        public abstract Builder setMissionName(String missionName);
+        public abstract Builder setLaunchDateUnix(Long launchDateUnix);
+        public abstract Builder setRocket(Rocket rocket);
+        public abstract Builder setLaunchSite(LaunchSite launchSite);
+        public abstract Builder setLaunchSuccess(Boolean launchSuccess);
+        public abstract Builder setDetails(String details);
+        public abstract Flight build();
     }
 
     @Nullable
