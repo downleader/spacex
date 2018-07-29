@@ -12,6 +12,7 @@ import com.example.spacex.persistence.sqlite.SQLiteHelper;
 import com.example.spacex.utils.gson.GsonAdapterFactory;
 import com.example.spacex.utils.rxjava.SchedulerProvider;
 import com.example.spacex.utils.rxjava.SchedulerProviderImpl;
+import com.example.spacex.viewmodel.factory.ViewModelFactory;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -37,6 +38,12 @@ public class ApplicationModule {
     @Singleton
     Context getApplicationContext() {
         return application;
+    }
+
+    @Provides
+    @Singleton
+    ViewModelFactory getViewModelFactory() {
+        return new ViewModelFactory();
     }
 
     @Provides

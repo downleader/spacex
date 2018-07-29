@@ -13,7 +13,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_FLIGHT
             = "CREATE TABLE IF NOT EXISTS " + SQLiteContract.Flight.TABLE_NAME + "("
-            + SQLiteContract.Flight.COLUMN_FLIGHT_NUMBER + " INTEGER PRIMARY KEY, "
+            + SQLiteContract.Flight._ID + " INTEGER PRIMARY KEY, "
+            + SQLiteContract.Flight.COLUMN_FLIGHT_NUMBER + " INTEGER, "
             + SQLiteContract.Flight.COLUMN_MISSION_NAME + " TEXT, "
             + SQLiteContract.Flight.COLUMN_LAUNCH_DATE + " INTEGER, "
             + SQLiteContract.Flight.COLUMN_LAUNCH_SITE + " TEXT, "

@@ -1,5 +1,6 @@
 package com.example.spacex.ui.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,14 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.spacex.R;
-import com.example.spacex.data.display.FlightItemDisplayModel;
 import com.example.spacex.databinding.FragmentFlightListBinding;
 import com.example.spacex.di.component.FragmentComponent;
 import com.example.spacex.ui.adapter.FlightAdapter;
 import com.example.spacex.utils.listener.OnFlightClickListener;
 import com.example.spacex.viewmodel.FlightListViewModel;
-
-import java.util.List;
+import com.example.spacex.viewmodel.factory.ViewModelFactory;
 
 import javax.inject.Inject;
 
@@ -30,11 +29,12 @@ import butterknife.Unbinder;
 public class FlightListFragment extends BaseFragment {
 
     @Inject
-    FlightListViewModel viewModel;
+    ViewModelFactory viewModelFactory;
 
     @BindView(R.id.flight_list)
     RecyclerView flightList;
 
+    private FlightListViewModel viewModel;
     private FlightAdapter flightAdapter;
     private Unbinder unbinder;
 
@@ -48,7 +48,7 @@ public class FlightListFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel.init(new ModelListener());
+        setupViewModel();
     }
 
     @Nullable
@@ -68,13 +68,7 @@ public class FlightListFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        viewModel.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        viewModel.onStop();
+        viewModel.loadData();
     }
 
     @Override
@@ -86,6 +80,15 @@ public class FlightListFragment extends BaseFragment {
     @Override
     protected void inject(FragmentComponent fragmentComponent) {
         fragmentComponent.inject(this);
+    }
+
+    private void setupViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(FlightListViewModel.class);
+        viewModel.getFlights().observe(this, (items) -> {
+            if (items != null) {
+                flightAdapter.setItems(items);   
+            }
+        });
     }
 
     private void setupFlightList() {
@@ -101,13 +104,5 @@ public class FlightListFragment extends BaseFragment {
         flightList.setHasFixedSize(true);
         flightList.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false));
-    }
-
-    private class ModelListener implements FlightListViewModel.Listener {
-
-        @Override
-        public void onFlightsLoaded(@NonNull List<FlightItemDisplayModel> flights) {
-            flightAdapter.setItems(flights);
-        }
     }
 }

@@ -1,15 +1,16 @@
 package com.example.spacex.viewmodel;
 
+import android.arch.lifecycle.ViewModel;
+
 import io.reactivex.disposables.CompositeDisposable;
 
-public abstract class BaseViewModel {
+public abstract class BaseViewModel extends ViewModel {
 
     final CompositeDisposable disposable = new CompositeDisposable();
 
-    public void onStart() {
-    }
-
-    public void onStop() {
+    @Override
+    protected void onCleared() {
+        super.onCleared();
         disposable.clear();
     }
 }

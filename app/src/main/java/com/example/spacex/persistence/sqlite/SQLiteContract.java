@@ -1,8 +1,10 @@
 package com.example.spacex.persistence.sqlite;
 
+import android.provider.BaseColumns;
+
 public final class SQLiteContract {
 
-    public static final class Flight {
+    public static final class Flight implements BaseColumns {
         public static final String TABLE_NAME = "flight";
         public static final String COLUMN_FLIGHT_NUMBER = "flight_number";
         public static final String COLUMN_MISSION_NAME = "mission_name";

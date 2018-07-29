@@ -1,5 +1,6 @@
 package com.example.spacex.ui.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import com.example.spacex.data.response.Flight;
 import com.example.spacex.databinding.FragmentFlightDetailsBinding;
 import com.example.spacex.di.component.FragmentComponent;
 import com.example.spacex.viewmodel.FlightDetailsViewModel;
+import com.example.spacex.viewmodel.factory.ViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -27,11 +29,12 @@ public class FlightDetailsFragment extends BaseFragment {
     private static final String ARG_FLIGHT = "flight";
 
     @Inject
-    FlightDetailsViewModel viewModel;
+    ViewModelFactory viewModelFactory;
 
     @BindView(R.id.launch_photo)
     ImageView photoView;
 
+    private FlightDetailsViewModel viewModel;
     private Unbinder unbinder;
 
     public static FlightDetailsFragment newInstance() {
@@ -49,11 +52,12 @@ public class FlightDetailsFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupViewModel();
         Bundle arguments = getArguments();
         if (arguments != null) {
             Flight flight = arguments.getParcelable(ARG_FLIGHT);
             if (flight != null) {
-                viewModel.init(flight, new ModelListener());
+                viewModel.init(flight);
             }
         }
     }
@@ -74,13 +78,7 @@ public class FlightDetailsFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        viewModel.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        viewModel.onStop();
+        viewModel.loadData();
     }
 
     @Override
@@ -94,14 +92,15 @@ public class FlightDetailsFragment extends BaseFragment {
         fragmentComponent.inject(this);
     }
 
-    private class ModelListener implements FlightDetailsViewModel.Listener {
-
-        @Override
-        public void loadPhoto(@NonNull String photoUrl) {
-            Picasso.with(getContext())
-                    .load(photoUrl)
-                    .error(R.drawable.ic_launcher_background)
-                    .into(photoView);
-        }
+    private void setupViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(FlightDetailsViewModel.class);
+        viewModel.getPhotoUrl().observe(this, (photoUrl) -> {
+            if (photoUrl != null) {
+                Picasso.with(getContext())
+                        .load(photoUrl)
+                        .error(R.drawable.ic_launcher_background)
+                        .into(photoView);
+            }
+        });
     }
 }

@@ -1,5 +1,7 @@
 package com.example.spacex.viewmodel;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
@@ -13,33 +15,35 @@ import com.example.spacex.data.response.Links;
 import com.example.spacex.utils.BusinessUtils;
 import com.example.spacex.utils.UiUtils;
 
-import javax.inject.Inject;
-
 public class FlightDetailsViewModel extends BaseViewModel {
 
     public final ObservableBoolean isContentVisible = new ObservableBoolean();
     public final ObservableField<FlightDetailsDisplayModel> details = new ObservableField<>();
 
-    private Flight flight;
-    private Listener listener;
+    private final MutableLiveData<String> photoUrl = new MutableLiveData<>();
 
+    private boolean initialized;
     private boolean photoLoaded;
 
-    @Inject
-    FlightDetailsViewModel() {
+    private Flight flight;
+
+    @NonNull
+    public LiveData<String> getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void init(@NonNull Flight flight, @NonNull Listener listener) {
-        this.flight = flight;
-        this.listener = listener;
+    public void init(@NonNull Flight flight) {
+        if (!initialized) {
+            this.flight = flight;
+        }
         setupUi();
+        initialized = true;
+        photoLoaded = false;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void loadData() {
         if (!photoLoaded) {
-            loadPhoto();
+            loadPhotoUrl();
             photoLoaded = true;
         }
     }
@@ -49,7 +53,7 @@ public class FlightDetailsViewModel extends BaseViewModel {
         isContentVisible.set(true);
     }
 
-    private void loadPhoto() {
+    private void loadPhotoUrl() {
         if (flight == null) {
             return;
         }
@@ -57,9 +61,9 @@ public class FlightDetailsViewModel extends BaseViewModel {
         if (links == null) {
             return;
         }
-        String photoUrl = links.missionPatchSmall();
-        if (!TextUtils.isEmpty(photoUrl)) {
-            listener.loadPhoto(photoUrl);
+        String photoUrlValue = links.missionPatchSmall();
+        if (!TextUtils.isEmpty(photoUrlValue)) {
+            photoUrl.setValue(photoUrlValue);
         }
     }
 
@@ -76,9 +80,5 @@ public class FlightDetailsViewModel extends BaseViewModel {
                 .setLaunched(BusinessUtils.safeUnbox(flight.launchSuccess()))
                 .setDetails(flight.details())
                 .build();
-    }
-
-    public interface Listener {
-        void loadPhoto(@NonNull String photoUrl);
     }
 }

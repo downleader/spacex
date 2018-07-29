@@ -1,11 +1,13 @@
 package com.example.spacex.ui.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 
 import com.example.spacex.R;
+import com.example.spacex.data.event.FlightSelectionEvent;
 import com.example.spacex.data.response.Flight;
 import com.example.spacex.di.component.ActivityComponent;
 import com.example.spacex.ui.fragment.FlightDetailsFragment;
@@ -14,13 +16,16 @@ import com.example.spacex.utils.NavigationUtils;
 import com.example.spacex.utils.UiUtils;
 import com.example.spacex.utils.listener.OnFlightClickListener;
 import com.example.spacex.viewmodel.FlightSelectionViewModel;
+import com.example.spacex.viewmodel.factory.ViewModelFactory;
 
 import javax.inject.Inject;
 
 public class FlightListActivity extends BaseActivity implements OnFlightClickListener {
 
     @Inject
-    FlightSelectionViewModel viewModel;
+    ViewModelFactory viewModelFactory;
+
+    private FlightSelectionViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,7 @@ public class FlightListActivity extends BaseActivity implements OnFlightClickLis
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
         setContentView(R.layout.activity_flight_list);
-        viewModel.init(new ModelListener());
+        setupViewModel();
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.list_container, FlightListFragment.newInstance());
@@ -39,18 +44,6 @@ public class FlightListActivity extends BaseActivity implements OnFlightClickLis
             }
             transaction.commit();
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        viewModel.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        viewModel.onStop();
     }
 
     @Override
@@ -63,8 +56,14 @@ public class FlightListActivity extends BaseActivity implements OnFlightClickLis
         activityComponent.inject(this);
     }
 
-    private void openFlightDetails(@NonNull Flight flight) {
-        if (UiUtils.isTablet()) {
+    private void setupViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(FlightSelectionViewModel.class);
+        viewModel.getSelectedFlight().observe(this, this::openFlightDetails);
+    }
+
+    private void openFlightDetails(@NonNull FlightSelectionEvent event) {
+        Flight flight = event.getFlight();
+        if (event.isSameScreen()) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.details_container, FlightDetailsFragment.newInstance(flight))
@@ -72,14 +71,6 @@ public class FlightListActivity extends BaseActivity implements OnFlightClickLis
                     .commit();
         } else {
             NavigationUtils.openDetails(this, flight);
-        }
-    } 
-
-    private class ModelListener implements FlightSelectionViewModel.Listener {
-
-        @Override
-        public void onFlightSelected(@NonNull Flight flight) {
-            openFlightDetails(flight);
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.spacex.viewmodel;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
@@ -27,25 +29,22 @@ public class FlightListViewModel extends BaseViewModel {
     public final ObservableBoolean isListVisible = new ObservableBoolean();
     public final ObservableField<String> message = new ObservableField<>();
 
-    private final FlightDataModel dataModel;
-    private final SchedulerProvider schedulerProvider;
-
-    private boolean flightsLoaded;
-    private Listener listener;
+    @Inject
+    FlightDataModel dataModel;
 
     @Inject
-    FlightListViewModel(FlightDataModel dataModel, SchedulerProvider schedulerProvider) {
-        this.dataModel = dataModel;
-        this.schedulerProvider = schedulerProvider;
+    SchedulerProvider schedulerProvider;
+
+    private final MutableLiveData<List<FlightItemDisplayModel>> flights = new MutableLiveData<>();
+
+    private boolean flightsLoaded;
+
+    @NonNull
+    public LiveData<List<FlightItemDisplayModel>> getFlights() {
+        return flights;
     }
 
-    public void init(@NonNull Listener listener) {
-        this.listener = listener;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void loadData() {
         if (!flightsLoaded) {
             isLoading.set(true);
             disposable.add(dataModel.getFlights()
@@ -76,13 +75,13 @@ public class FlightListViewModel extends BaseViewModel {
     private class FlightsObserver extends DisposableSingleObserver<List<FlightItemDisplayModel>> {
 
         @Override
-        public void onSuccess(List<FlightItemDisplayModel> flights) {
-            if (flights.isEmpty()) {
+        public void onSuccess(List<FlightItemDisplayModel> flightList) {
+            if (flightList.isEmpty()) {
                 isListVisible.set(false);
                 message.set(getString(R.string.error_no_data));
             } else {
                 isListVisible.set(true);
-                listener.onFlightsLoaded(flights);
+                flights.setValue(flightList);
             }
         }
 
@@ -92,9 +91,5 @@ public class FlightListViewModel extends BaseViewModel {
             message.set(getString(R.string.error_unexpected));
             Timber.w(throwable);
         }
-    }
-
-    public interface Listener {
-        void onFlightsLoaded(@NonNull List<FlightItemDisplayModel> flights);
     }
 }
